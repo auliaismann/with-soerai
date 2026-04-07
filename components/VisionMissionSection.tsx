@@ -49,9 +49,9 @@ export default function VisionMissionSection() {
           >
             <motion.div
               {...reveal("left", 0.08)}
-              className="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-white/16"
+              className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/16"
             >
-              <Target size={22} />
+              <Target className="h-8 w-8" />
             </motion.div>
             <motion.h3
               {...reveal("left", 0.12)}
@@ -73,9 +73,9 @@ export default function VisionMissionSection() {
           >
             <motion.div
               {...reveal("right", 0.1)}
-              className="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-[var(--olive-light)]/30 text-[var(--olive-dark)]"
+              className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--olive-light)]/30 text-[var(--olive-dark)]"
             >
-              <ListOrdered size={22} />
+              <ListOrdered className="h-8 w-8" />
             </motion.div>
             <motion.h3
               {...reveal("right", 0.14)}

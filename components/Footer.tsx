@@ -73,22 +73,22 @@ export default function Footer() {
   });
 
   return (
-    <footer className="relative mt-6 bg-[var(--burgundy)] px-4 pb-7 pt-12 text-[var(--cream)] sm:px-6 lg:px-8">
+    <footer className="relative z-50 mt-6 bg-[var(--burgundy)] px-4 pb-0 pt-12 text-[var(--cream)] sm:px-6 lg:px-8">
       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,var(--pink-primary),var(--olive-light))]" />
 
-      <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-3">
-        <motion.div {...reveal("left", 0.02)} className="space-y-4">
+      <div className="mx-auto grid w-full max-w-7xl gap-10 pb-8 text-left md:grid-cols-3">
+        <motion.div {...reveal("left", 0.02)} className="w-full max-w-sm space-y-4 md:max-w-none">
           <Logo className="block h-auto w-[250px] object-contain" />
           <p className="max-w-sm text-sm text-[var(--cream)]/80">
             {content.footer.missionLine}
           </p>
         </motion.div>
 
-        <motion.div {...reveal("right", 0.08)}>
+        <motion.div {...reveal("right", 0.08)} className="w-full max-w-sm md:max-w-none">
           <h3 className="font-subheading text-sm font-semibold uppercase tracking-[0.14em] text-[var(--cream)]/88">
             {content.footer.navTitle}
           </h3>
-          <nav className="mt-4 flex flex-col gap-2 text-sm">
+          <nav className="mt-4 flex flex-col items-start gap-2 text-sm">
             {content.header.nav.map((item) => (
               <a
                 key={item.href}
@@ -106,7 +106,7 @@ export default function Footer() {
             </a>
           </nav>
 
-          <div className="mt-5 flex items-center gap-3">
+          <div className="mt-5 flex items-center justify-start gap-3">
             <motion.a
               aria-label={content.footer.socials.instagram}
               href="https://instagram.com/withsoerai"
@@ -156,7 +156,7 @@ export default function Footer() {
           </div>
         </motion.div>
 
-        <motion.div {...reveal("left", 0.14)}>
+        <motion.div {...reveal("left", 0.14)} className="w-full max-w-sm md:max-w-none">
           <h3 className="font-subheading text-sm font-semibold uppercase tracking-[0.14em] text-[var(--cream)]/88">
             {content.footer.contactTitle}
           </h3>
@@ -192,10 +192,23 @@ export default function Footer() {
       </div>
 
       <motion.div
-        {...reveal("right", 0.18)}
-        className="mx-auto mt-10 w-full max-w-7xl border-t border-white/15 pt-5 text-center text-xs text-[var(--cream)]/78"
+        initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "0px" }}
+        transition={{ duration: reduceMotion ? 0 : 0.45, ease: EASING, delay: reduceMotion ? 0 : 0.08 }}
+        className="relative z-50 mt-2 -mx-4 border-t border-[var(--burgundy)]/15 bg-[var(--cream)] px-4 py-4 text-center text-xs leading-relaxed text-[#701732] sm:-mx-6 sm:px-6 sm:text-sm lg:-mx-8 lg:px-8"
       >
-        {content.footer.copyright}
+        <p className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-center">
+          <span>© 2026 With Soerai. All Rights Reserved | Powered by</span>
+          <a
+            href="https://instagram.com/dekatlokal"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center font-semibold underline decoration-[1.5px] underline-offset-[3px] transition-colors hover:text-[var(--pink-primary)]"
+          >
+            DekatLokal
+          </a>
+        </p>
       </motion.div>
     </footer>
   );

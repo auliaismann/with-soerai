@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { MoreVertical, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useContent } from "@/context/LanguageContext";
@@ -29,19 +29,23 @@ const MOBILE_LINK_ITEM_VARIANTS = {
 };
 
 export default function Header() {
-  const { scrollY } = useScroll();
   const content = useContent();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
   const [isPoweredLinkHovered, setIsPoweredLinkHovered] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsHeaderScrolled(latest > 10);
-  });
-
   useEffect(() => {
-    setIsHeaderScrolled(scrollY.get() > 10);
-  }, [scrollY]);
+    const handleScroll = () => {
+      setIsHeaderScrolled(window.scrollY > 10);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (menuOpen) {
@@ -110,59 +114,53 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-[60] px-3 transition-[padding,background-color,backdrop-filter,box-shadow] duration-300 sm:px-6 ${
-          isHeaderScrolled
-            ? "bg-[rgba(244,248,222,0.65)] pt-1.5 shadow-[0_10px_24px_rgba(112,23,50,0.1)] backdrop-blur-md"
-            : "bg-transparent pt-3"
+        className={`sticky left-0 right-0 top-0 z-[100] px-3 transition-[padding] duration-300 sm:px-6 ${
+          isHeaderScrolled ? "pt-1.5" : "pt-3"
         }`}
       >
-        <div className="mx-auto w-full max-w-7xl">
-          <div className="relative">
-            <div
-              className={`glass-nav flex w-full items-center justify-between transition-[padding,border-radius] duration-300 ${
-                isHeaderScrolled ? "px-3 py-1.5 sm:px-5 sm:py-2" : "px-3 py-2 sm:px-5 sm:py-2.5"
-              } ${
-                menuOpen ? "rounded-t-2xl rounded-b-none lg:rounded-full" : "rounded-2xl"
-              }`}
+        <div
+          className={`glass-nav flex w-full items-center justify-between transition-[padding,border-radius] duration-300 ${
+            isHeaderScrolled ? "px-3 py-1.5 sm:px-5 sm:py-2" : "px-3 py-2 sm:px-5 sm:py-2.5"
+          } ${
+            menuOpen ? "rounded-t-2xl rounded-b-none lg:rounded-full" : "rounded-2xl"
+          }`}
+        >
+          <Link href="#hero" aria-label="WITH SOERAI Home" className="shrink-0" onClick={closeMobileMenu}>
+            <Logo className="block h-auto w-[100px] sm:w-[120px]" />
+          </Link>
+
+          <nav className="hidden items-center gap-6 lg:flex">
+            {content.header.nav.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="font-subheading text-sm font-semibold tracking-[0.05em] text-[var(--burgundy)] transition-colors hover:text-[var(--pink-primary)]"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="hidden items-center gap-3 lg:flex">
+            <LanguageToggle />
+            <a
+              href="#galeri"
+              className="cta-gradient-btn px-5 py-2.5 font-subheading text-sm font-semibold tracking-[0.06em]"
             >
-              <Link href="#hero" aria-label="WITH SOERAI Home" className="shrink-0" onClick={closeMobileMenu}>
-                <Logo className="block h-auto w-[100px] sm:w-[120px]" />
-              </Link>
+              {content.header.joinNow}
+            </a>
+          </div>
 
-              <nav className="hidden items-center gap-6 lg:flex">
-                {content.header.nav.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="font-subheading text-sm font-semibold tracking-[0.05em] text-[var(--burgundy)] transition-colors hover:text-[var(--pink-primary)]"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </nav>
-
-              <div className="hidden items-center gap-3 lg:flex">
-                <LanguageToggle />
-                <a
-                  href="#galeri"
-                  className="cta-gradient-btn px-5 py-2.5 font-subheading text-sm font-semibold tracking-[0.06em]"
-                >
-                  {content.header.joinNow}
-                </a>
-              </div>
-
-              <div className="flex items-center gap-2 lg:hidden">
-                <LanguageToggle />
-                <button
-                  type="button"
-                  onClick={() => setMenuOpen((prev) => !prev)}
-                  aria-label={menuOpen ? content.header.menuClose : content.header.menuOpen}
-                  className="y2k-pill grid size-10 place-items-center rounded-full text-[var(--burgundy)]"
-                >
-                  <MoreVertical size={22} color="#bf1b59" />
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 lg:hidden">
+            <LanguageToggle />
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label={menuOpen ? content.header.menuClose : content.header.menuOpen}
+              className="y2k-pill grid size-10 place-items-center rounded-full text-[var(--burgundy)]"
+            >
+              <MoreVertical size={22} color="#bf1b59" />
+            </button>
           </div>
         </div>
       </header>
@@ -181,9 +179,9 @@ export default function Header() {
               left: 0,
               right: 0,
               bottom: 0,
-              width: "100vw",
+              width: "100%",
               height: "100dvh",
-              zIndex: 70,
+              zIndex: 120,
               backgroundColor: "#f4f8de",
               overflowY: "auto",
             }}

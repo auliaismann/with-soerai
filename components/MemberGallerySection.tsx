@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useContent, useLanguage } from "@/context/LanguageContext";
 import { members, MemberType } from "@/lib/members";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
@@ -25,6 +25,7 @@ export default function MemberGallerySection() {
   const { language } = useLanguage();
   const reduceMotion = useStableReducedMotion();
   const [filter, setFilter] = useState<Filter>("all");
+  const mobileScrollerRef = useRef<HTMLDivElement>(null);
   const emptyStateText =
     language === "id"
       ? "Belum ada profil untuk filter ini."
@@ -64,6 +65,10 @@ export default function MemberGallerySection() {
     }
 
     return members.filter((person) => person.type === filter);
+  }, [filter]);
+
+  useEffect(() => {
+    mobileScrollerRef.current?.scrollTo({ left: 0, behavior: "smooth" });
   }, [filter]);
 
   const reveal = (direction: "left" | "right", delay = 0) => ({
@@ -136,43 +141,45 @@ export default function MemberGallerySection() {
           </h2>
         </motion.div>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <motion.button
-            {...reveal("left", 0.08)}
-            type="button"
-            onClick={() => setFilter("all")}
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-              filter === "all"
-                ? "bg-[var(--pink-primary)] text-white shadow-[0_10px_22px_rgba(191,27,89,0.3)]"
-                : "ghost-btn border-[var(--olive-dark)]/45"
-            }`}
-          >
-            {content.gallery.filters.all}
-          </motion.button>
-          <motion.button
-            {...reveal("right", 0.12)}
-            type="button"
-            onClick={() => setFilter("member")}
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-              filter === "member"
-                ? "bg-[var(--pink-primary)] text-white shadow-[0_10px_22px_rgba(191,27,89,0.3)]"
-                : "ghost-btn border-[var(--olive-dark)]/45"
-            }`}
-          >
-            {content.gallery.filters.member}
-          </motion.button>
-          <motion.button
-            {...reveal("left", 0.16)}
-            type="button"
-            onClick={() => setFilter("mentor")}
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-              filter === "mentor"
-                ? "bg-[var(--pink-primary)] text-white shadow-[0_10px_22px_rgba(191,27,89,0.3)]"
-                : "ghost-btn border-[var(--olive-dark)]/45"
-            }`}
-          >
-            {content.gallery.filters.mentor}
-          </motion.button>
+        <div className="hide-scrollbar mt-8 -mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
+          <div className="flex w-max min-w-full flex-nowrap gap-3 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center">
+            <motion.button
+              {...reveal("left", 0.08)}
+              type="button"
+              onClick={() => setFilter("all")}
+              className={`shrink-0 whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition ${
+                filter === "all"
+                  ? "bg-[var(--pink-primary)] text-white shadow-[0_10px_22px_rgba(191,27,89,0.3)]"
+                  : "ghost-btn border-[var(--olive-dark)]/45"
+              }`}
+            >
+              {content.gallery.filters.all}
+            </motion.button>
+            <motion.button
+              {...reveal("right", 0.12)}
+              type="button"
+              onClick={() => setFilter("member")}
+              className={`shrink-0 whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition ${
+                filter === "member"
+                  ? "bg-[var(--pink-primary)] text-white shadow-[0_10px_22px_rgba(191,27,89,0.3)]"
+                  : "ghost-btn border-[var(--olive-dark)]/45"
+              }`}
+            >
+              {content.gallery.filters.member}
+            </motion.button>
+            <motion.button
+              {...reveal("left", 0.16)}
+              type="button"
+              onClick={() => setFilter("mentor")}
+              className={`shrink-0 whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition ${
+                filter === "mentor"
+                  ? "bg-[var(--pink-primary)] text-white shadow-[0_10px_22px_rgba(191,27,89,0.3)]"
+                  : "ghost-btn border-[var(--olive-dark)]/45"
+              }`}
+            >
+              {content.gallery.filters.mentor}
+            </motion.button>
+          </div>
         </div>
 
         {filteredMembers.length === 0 ? (
@@ -183,6 +190,7 @@ export default function MemberGallerySection() {
           <>
             <div className="mt-10 md:hidden">
               <motion.div
+                ref={mobileScrollerRef}
                 key={`mobile-${filter}-${filteredMembers.length}`}
                 variants={containerVariants}
                 initial={reduceMotion ? "visible" : "hidden"}

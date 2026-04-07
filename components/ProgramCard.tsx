@@ -110,8 +110,8 @@ export function ProgramCard({
               {overlineLabel}
             </p>
 
-            <span className="mb-4 inline-grid size-11 place-items-center rounded-full bg-[#bf1b59]/10 text-[#bf1b59]">
-              <ProgramIconGlyph iconKey={iconKey} size={20} />
+            <span className="mb-4 inline-grid size-14 place-items-center rounded-full bg-[#bf1b59]/12 text-[#bf1b59]">
+              <ProgramIconGlyph iconKey={iconKey} size={28} />
             </span>
 
             <h3 className="mb-2 font-hero text-3xl italic text-[#701732]">{title}</h3>
@@ -146,8 +146,8 @@ export function ProgramCard({
         >
           <div className={`min-h-0 flex-1 space-y-4 pr-1 ${scrollClassName}`}>
             <div className="flex items-center gap-3">
-              <span className="inline-grid size-8 shrink-0 place-items-center rounded-full bg-[#f4f8de]/14 text-[#f4f8de]">
-                <ProgramIconGlyph iconKey={iconKey} size={16} />
+              <span className="inline-grid size-10 shrink-0 place-items-center rounded-full bg-[#f4f8de]/14 text-[#f4f8de]">
+                <ProgramIconGlyph iconKey={iconKey} size={20} />
               </span>
               <h3 className="font-hero text-2xl italic text-[#f4f8de]">{title}</h3>
             </div>

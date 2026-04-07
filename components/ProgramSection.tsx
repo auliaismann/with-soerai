@@ -34,7 +34,7 @@ export default function ProgramSection() {
   });
 
   return (
-    <section id="program" className="relative px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+    <section id="program" className="relative overflow-hidden px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
       <BotanicalDeco
         className="absolute -left-2 top-8 w-[88px] opacity-80 sm:left-2 sm:top-16 sm:w-[122px] lg:left-4 lg:top-24 lg:w-[220px]"
         label="Flower 03"

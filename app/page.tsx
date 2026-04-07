@@ -12,16 +12,18 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="relative overflow-hidden">
-        <HeroSection />
-        <AboutSection />
-        <VisionMissionSection />
-        <ProgramSection />
-        <OrgStructureSection />
-        <MemberGallerySection />
-        <CTASection />
-      </main>
-      <Footer />
+      <div className="relative">
+        <main className="relative overflow-hidden">
+          <HeroSection />
+          <AboutSection />
+          <VisionMissionSection />
+          <ProgramSection />
+          <OrgStructureSection />
+          <MemberGallerySection />
+          <CTASection />
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }
