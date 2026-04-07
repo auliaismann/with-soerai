@@ -9,12 +9,26 @@ import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
 type Filter = "all" | MemberType;
 const EASING = [0.22, 1, 0.36, 1] as const;
+const SCROLL_SPRING = {
+  type: "spring",
+  damping: 20,
+  stiffness: 100,
+} as const;
+
+const SCROLL_VIEWPORT = {
+  once: true,
+  margin: "-100px",
+} as const;
 
 export default function MemberGallerySection() {
   const content = useContent();
   const { language } = useLanguage();
   const reduceMotion = useStableReducedMotion();
   const [filter, setFilter] = useState<Filter>("all");
+  const emptyStateText =
+    language === "id"
+      ? "Belum ada profil untuk filter ini."
+      : "No profiles are available for this filter.";
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -51,6 +65,18 @@ export default function MemberGallerySection() {
 
     return members.filter((person) => person.type === filter);
   }, [filter]);
+
+  const reveal = (direction: "left" | "right", delay = 0) => ({
+    initial: reduceMotion
+      ? { opacity: 1, x: 0 }
+      : { opacity: 0, x: direction === "left" ? -60 : 60 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: SCROLL_VIEWPORT,
+    transition: {
+      ...SCROLL_SPRING,
+      delay: reduceMotion ? 0 : delay,
+    },
+  });
 
   const renderCard = (person: (typeof members)[number], index: number, compact: boolean) => {
     const roleText = language === "id" ? person.roleId : person.roleEn;
@@ -104,20 +130,15 @@ export default function MemberGallerySection() {
   return (
     <section id="galeri" className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-7xl">
-        <motion.div
-          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: reduceMotion ? 0 : 0.5, ease: EASING }}
-          className="text-center"
-        >
+        <motion.div {...reveal("left", 0.02)} className="text-center">
           <h2 className="font-hero text-4xl italic text-[var(--burgundy)] sm:text-5xl">
             {content.gallery.sectionTitle}
           </h2>
         </motion.div>
 
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <button
+          <motion.button
+            {...reveal("left", 0.08)}
             type="button"
             onClick={() => setFilter("all")}
             className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
@@ -127,8 +148,9 @@ export default function MemberGallerySection() {
             }`}
           >
             {content.gallery.filters.all}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            {...reveal("right", 0.12)}
             type="button"
             onClick={() => setFilter("member")}
             className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
@@ -138,8 +160,9 @@ export default function MemberGallerySection() {
             }`}
           >
             {content.gallery.filters.member}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            {...reveal("left", 0.16)}
             type="button"
             onClick={() => setFilter("mentor")}
             className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
@@ -149,30 +172,38 @@ export default function MemberGallerySection() {
             }`}
           >
             {content.gallery.filters.mentor}
-          </button>
+          </motion.button>
         </div>
 
-        <div className="mt-10 md:hidden">
-          <motion.div
-            variants={containerVariants}
-            initial={reduceMotion ? false : "hidden"}
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
-            className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-4"
-          >
-            {filteredMembers.map((person, index) => renderCard(person, index, false))}
-          </motion.div>
-        </div>
+        {filteredMembers.length === 0 ? (
+          <div className="mt-10 rounded-2xl border border-[rgba(112,23,50,0.16)] bg-white/80 px-6 py-5 text-center">
+            <p className="text-sm text-[var(--burgundy)]/82">{emptyStateText}</p>
+          </div>
+        ) : (
+          <>
+            <div className="mt-10 md:hidden">
+              <motion.div
+                key={`mobile-${filter}-${filteredMembers.length}`}
+                variants={containerVariants}
+                initial={reduceMotion ? "visible" : "hidden"}
+                animate="visible"
+                className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-4"
+              >
+                {filteredMembers.map((person, index) => renderCard(person, index, false))}
+              </motion.div>
+            </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial={reduceMotion ? false : "hidden"}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          className="mt-10 hidden grid-cols-3 gap-3 md:grid lg:grid-cols-4 xl:grid-cols-6"
-        >
-          {filteredMembers.map((person, index) => renderCard(person, index, true))}
-        </motion.div>
+            <motion.div
+              key={`desktop-${filter}-${filteredMembers.length}`}
+              variants={containerVariants}
+              initial={reduceMotion ? "visible" : "hidden"}
+              animate="visible"
+              className="mt-10 hidden grid-cols-3 gap-3 md:grid lg:grid-cols-4 xl:grid-cols-6"
+            >
+              {filteredMembers.map((person, index) => renderCard(person, index, true))}
+            </motion.div>
+          </>
+        )}
       </div>
     </section>
   );

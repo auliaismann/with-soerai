@@ -5,9 +5,20 @@ import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { useContent } from "@/context/LanguageContext";
 import Logo from "@/components/Logo";
+import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 import dekatLokalLogo from "../public/image/dekatlokal.png";
 
 const EASING = [0.22, 1, 0.36, 1] as const;
+const SCROLL_SPRING = {
+  type: "spring",
+  damping: 20,
+  stiffness: 100,
+} as const;
+
+const SCROLL_VIEWPORT = {
+  once: true,
+  margin: "-100px",
+} as const;
 
 function InstagramIcon({ size = 17 }: { size?: number }) {
   return (
@@ -47,20 +58,33 @@ function TikTokIcon({ size = 17 }: { size?: number }) {
 
 export default function Footer() {
   const content = useContent();
+  const reduceMotion = useStableReducedMotion();
+
+  const reveal = (direction: "left" | "right", delay = 0) => ({
+    initial: reduceMotion
+      ? { opacity: 1, x: 0 }
+      : { opacity: 0, x: direction === "left" ? -60 : 60 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: SCROLL_VIEWPORT,
+    transition: {
+      ...SCROLL_SPRING,
+      delay: reduceMotion ? 0 : delay,
+    },
+  });
 
   return (
     <footer className="relative mt-6 bg-[var(--burgundy)] px-4 pb-7 pt-12 text-[var(--cream)] sm:px-6 lg:px-8">
       <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,var(--pink-primary),var(--olive-light))]" />
 
       <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-3">
-        <div className="space-y-4">
+        <motion.div {...reveal("left", 0.02)} className="space-y-4">
           <Logo className="block h-auto w-[250px] object-contain" />
           <p className="max-w-sm text-sm text-[var(--cream)]/80">
             {content.footer.missionLine}
           </p>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div {...reveal("right", 0.08)}>
           <h3 className="font-subheading text-sm font-semibold uppercase tracking-[0.14em] text-[var(--cream)]/88">
             {content.footer.navTitle}
           </h3>
@@ -130,9 +154,9 @@ export default function Footer() {
               <Mail size={17} />
             </motion.a>
           </div>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div {...reveal("left", 0.14)}>
           <h3 className="font-subheading text-sm font-semibold uppercase tracking-[0.14em] text-[var(--cream)]/88">
             {content.footer.contactTitle}
           </h3>
@@ -164,12 +188,15 @@ export default function Footer() {
               />
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="mx-auto mt-10 w-full max-w-7xl border-t border-white/15 pt-5 text-center text-xs text-[var(--cream)]/78">
+      <motion.div
+        {...reveal("right", 0.18)}
+        className="mx-auto mt-10 w-full max-w-7xl border-t border-white/15 pt-5 text-center text-xs text-[var(--cream)]/78"
+      >
         {content.footer.copyright}
-      </div>
+      </motion.div>
     </footer>
   );
 }

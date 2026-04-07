@@ -36,8 +36,12 @@ export default function Header() {
   const [isPoweredLinkHovered, setIsPoweredLinkHovered] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsHeaderScrolled(latest > 20);
+    setIsHeaderScrolled(latest > 10);
   });
+
+  useEffect(() => {
+    setIsHeaderScrolled(scrollY.get() > 10);
+  }, [scrollY]);
 
   useEffect(() => {
     if (menuOpen) {
@@ -106,14 +110,18 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 px-4 pt-3 transition-[background-color,backdrop-filter] duration-300 sm:px-6 ${
-          isHeaderScrolled ? "bg-[rgba(244,248,222,0.65)] backdrop-blur-md" : "bg-transparent"
+        className={`sticky top-0 z-[60] px-3 transition-[padding,background-color,backdrop-filter,box-shadow] duration-300 sm:px-6 ${
+          isHeaderScrolled
+            ? "bg-[rgba(244,248,222,0.65)] pt-1.5 shadow-[0_10px_24px_rgba(112,23,50,0.1)] backdrop-blur-md"
+            : "bg-transparent pt-3"
         }`}
       >
         <div className="mx-auto w-full max-w-7xl">
           <div className="relative">
             <div
-              className={`glass-nav flex w-full items-center justify-between px-3 py-2 sm:px-5 lg:rounded-full ${
+              className={`glass-nav flex w-full items-center justify-between transition-[padding,border-radius] duration-300 ${
+                isHeaderScrolled ? "px-3 py-1.5 sm:px-5 sm:py-2" : "px-3 py-2 sm:px-5 sm:py-2.5"
+              } ${
                 menuOpen ? "rounded-t-2xl rounded-b-none lg:rounded-full" : "rounded-2xl"
               }`}
             >
@@ -175,7 +183,7 @@ export default function Header() {
               bottom: 0,
               width: "100vw",
               height: "100dvh",
-              zIndex: 55,
+              zIndex: 70,
               backgroundColor: "#f4f8de",
               overflowY: "auto",
             }}

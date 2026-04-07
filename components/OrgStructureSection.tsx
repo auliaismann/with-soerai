@@ -4,7 +4,16 @@ import { motion } from "framer-motion";
 import { useContent } from "@/context/LanguageContext";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
-const EASING = [0.22, 1, 0.36, 1] as const;
+const SCROLL_SPRING = {
+  type: "spring",
+  damping: 20,
+  stiffness: 100,
+} as const;
+
+const SCROLL_VIEWPORT = {
+  once: true,
+  margin: "-100px",
+} as const;
 
 function RoleCard({
   role,
@@ -76,31 +85,35 @@ export default function OrgStructureSection() {
   const content = useContent();
   const reduceMotion = useStableReducedMotion();
 
-  const reveal = (delay = 0) => ({
-    initial: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
+  const reveal = (direction: "left" | "right", delay = 0) => ({
+    initial: reduceMotion
+      ? { opacity: 1, x: 0 }
+      : { opacity: 0, x: direction === "left" ? -60 : 60 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: SCROLL_VIEWPORT,
     transition: {
-      duration: reduceMotion ? 0 : 0.5,
+      ...SCROLL_SPRING,
       delay: reduceMotion ? 0 : delay,
-      ease: EASING,
     },
   });
 
   return (
     <section id="struktur-organisasi" className="px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto w-full max-w-7xl">
-        <motion.div {...reveal()} className="text-center">
-          <h2 className="font-hero text-4xl italic text-[var(--burgundy)] sm:text-5xl">
+        <div className="text-center">
+          <motion.h2 {...reveal("left", 0.02)} className="font-hero text-4xl italic text-[var(--burgundy)] sm:text-5xl">
             {content.org.sectionTitle}
-          </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-[15px] text-[var(--burgundy)]/86 sm:text-lg">
+          </motion.h2>
+          <motion.p
+            {...reveal("right", 0.08)}
+            className="mx-auto mt-4 max-w-3xl text-[15px] text-[var(--burgundy)]/86 sm:text-lg"
+          >
             {content.org.intro}
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
         <div className="mt-8">
-          <motion.div {...reveal(0.04)} className="mx-auto max-w-[420px]">
+          <motion.div {...reveal("left", 0.1)} className="mx-auto max-w-[420px]">
             <RoleCard
               role={content.org.president.role}
               name={content.org.president.name}
@@ -119,7 +132,7 @@ export default function OrgStructureSection() {
             </div>
 
             <div className="grid gap-4 pt-2 md:grid-cols-2 md:pt-7">
-              <motion.div {...reveal(0.07)}>
+              <motion.div {...reveal("left", 0.14)}>
                 <RoleCard
                   role={content.org.secretary.role}
                   name={content.org.secretary.name}
@@ -127,7 +140,7 @@ export default function OrgStructureSection() {
                   underline
                 />
               </motion.div>
-              <motion.div {...reveal(0.09)}>
+              <motion.div {...reveal("right", 0.18)}>
                 <RoleCard
                   role={content.org.treasurer.role}
                   name={content.org.treasurer.name}
@@ -159,7 +172,10 @@ export default function OrgStructureSection() {
 
             <div className="grid gap-4 pt-2 md:grid-cols-2 md:pt-8 xl:grid-cols-4">
               {content.org.divisions.map((division, index) => (
-                <motion.div key={division.name} {...reveal(0.12 + index * 0.03)}>
+                <motion.div
+                  key={division.name}
+                  {...reveal(index % 2 === 0 ? "left" : "right", 0.2 + index * 0.04)}
+                >
                   <DivisionCard
                     name={division.name}
                     leader={division.leader}

@@ -6,35 +6,32 @@ import ProgramCard from "@/components/ProgramCard";
 import { useContent } from "@/context/LanguageContext";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
-const EASING = [0.22, 1, 0.36, 1] as const;
+const SCROLL_SPRING = {
+  type: "spring",
+  damping: 20,
+  stiffness: 100,
+} as const;
+
+const SCROLL_VIEWPORT = {
+  once: true,
+  margin: "-100px",
+} as const;
 
 export default function ProgramSection() {
   const content = useContent();
   const reduceMotion = useStableReducedMotion();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: reduceMotion ? 0 : 0.5,
-        ease: EASING,
-        staggerChildren: reduceMotion ? 0 : 0.2,
-      },
+  const reveal = (direction: "left" | "right", delay = 0) => ({
+    initial: reduceMotion
+      ? { opacity: 1, x: 0 }
+      : { opacity: 0, x: direction === "left" ? -60 : 60 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: SCROLL_VIEWPORT,
+    transition: {
+      ...SCROLL_SPRING,
+      delay: reduceMotion ? 0 : delay,
     },
-  };
-
-  const itemVariants = {
-    hidden: { y: reduceMotion ? 0 : 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: reduceMotion ? 0 : 0.5,
-        ease: EASING,
-      },
-    },
-  };
+  });
 
   return (
     <section id="program" className="relative px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
@@ -52,39 +49,37 @@ export default function ProgramSection() {
       />
 
       <div className="mx-auto w-full max-w-7xl">
-        <motion.div
-          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: reduceMotion ? 0 : 0.5, ease: EASING }}
-          className="text-center"
-        >
-          <p className="font-subheading text-xs font-semibold uppercase tracking-[0.15em] text-[var(--olive-dark)]">
+        <div className="text-center">
+          <motion.p
+            {...reveal("left", 0.03)}
+            className="font-subheading text-xs font-semibold uppercase tracking-[0.15em] text-[var(--olive-dark)]"
+          >
             WITH SOERAI
-          </p>
-          <h2 className="mt-2 font-hero text-4xl italic text-[var(--burgundy)] sm:text-5xl">
+          </motion.p>
+          <motion.h2
+            {...reveal("right", 0.08)}
+            className="mt-2 font-hero text-4xl italic text-[var(--burgundy)] sm:text-5xl"
+          >
             {content.program.sectionTitle}
-          </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-[15px] text-[var(--burgundy)]/88 sm:text-lg">
+          </motion.h2>
+          <motion.p
+            {...reveal("left", 0.14)}
+            className="mx-auto mt-4 max-w-3xl text-[15px] text-[var(--burgundy)]/88 sm:text-lg"
+          >
             {content.program.intro}
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial={reduceMotion ? false : "hidden"}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.12 }}
-          className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3"
-        >
-          {content.program.cards.map((program) => {
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {content.program.cards.map((program, index) => {
             return (
               <motion.div
                 key={program.id}
-                variants={itemVariants}
+                {...reveal(index % 2 === 0 ? "left" : "right", 0.18 + index * 0.06)}
                 className="h-full"
               >
                 <ProgramCard
+                  programId={program.id}
                   title={program.title}
                   subtitle={program.subtitle}
                   description={program.description}
@@ -94,7 +89,7 @@ export default function ProgramSection() {
               </motion.div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

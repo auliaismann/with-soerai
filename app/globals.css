@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --pink-primary: #bf1b59;
-  --pink-light: #e26a8a;
+  --pink-primary: #e26a8a;
+  --pink-light: #f3b2c3;
   --olive-dark: #576100;
   --olive-light: #abb039;
   --cream: #f4f8de;
@@ -60,8 +60,12 @@ html {
 body {
   position: relative;
   min-height: 100svh;
-  overflow-x: clip;
-  background: var(--cream);
+  background: linear-gradient(
+    165deg,
+    rgba(226, 106, 138, 0.24) 0%,
+    rgba(244, 248, 222, 0.9) 44%,
+    rgba(226, 106, 138, 0.14) 100%
+  );
   color: var(--burgundy);
   font-family: var(--font-body);
   line-height: 1.6;
@@ -136,10 +140,15 @@ section {
 
 .ambient-backdrop {
   background:
-    radial-gradient(circle at 10% 15%, rgba(226, 106, 138, 0.24), transparent 35%),
-    radial-gradient(circle at 86% 12%, rgba(171, 176, 57, 0.2), transparent 36%),
-    radial-gradient(circle at 72% 80%, rgba(191, 27, 89, 0.14), transparent 35%),
-    var(--cream);
+    radial-gradient(circle at 10% 14%, rgba(226, 106, 138, 0.42), transparent 36%),
+    radial-gradient(circle at 88% 12%, rgba(243, 178, 195, 0.32), transparent 38%),
+    radial-gradient(circle at 74% 82%, rgba(112, 23, 50, 0.16), transparent 40%),
+    linear-gradient(
+      160deg,
+      rgba(226, 106, 138, 0.2) 0%,
+      rgba(244, 248, 222, 0.84) 48%,
+      rgba(226, 106, 138, 0.14) 100%
+    );
 }
 
 .y2k-pill {

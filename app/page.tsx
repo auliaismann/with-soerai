@@ -13,27 +13,13 @@ export default function Home() {
     <>
       <Header />
       <main className="relative overflow-hidden">
-        <div data-aos="fade-up" data-aos-delay="0">
-          <HeroSection />
-        </div>
-        <div data-aos="fade-up" data-aos-delay="60">
-          <AboutSection />
-        </div>
-        <div data-aos="fade-up" data-aos-delay="80">
-          <VisionMissionSection />
-        </div>
-        <div data-aos="fade-up" data-aos-delay="100">
-          <ProgramSection />
-        </div>
-        <div data-aos="fade-up" data-aos-delay="120">
-          <OrgStructureSection />
-        </div>
-        <div data-aos="fade-up" data-aos-delay="140">
-          <MemberGallerySection />
-        </div>
-        <div data-aos="zoom-in-up" data-aos-delay="100">
-          <CTASection />
-        </div>
+        <HeroSection />
+        <AboutSection />
+        <VisionMissionSection />
+        <ProgramSection />
+        <OrgStructureSection />
+        <MemberGallerySection />
+        <CTASection />
       </main>
       <Footer />
     </>

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Playfair_Display, Poppins } from "next/font/google";
-import AOSProvider from "@/components/AOSProvider";
 import { LanguageProvider } from "@/context/LanguageContext";
 import "./globals.css";
-import "aos/dist/aos.css";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -50,9 +48,8 @@ export default function RootLayout({
       lang="id"
       className={`${poppins.variable} ${montserrat.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="ambient-backdrop min-h-full overflow-x-clip">
+      <body className="ambient-backdrop min-h-full">
         <LanguageProvider>
-          <AOSProvider />
           {children}
         </LanguageProvider>
       </body>

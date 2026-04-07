@@ -5,7 +5,16 @@ import { useContent } from "@/context/LanguageContext";
 import BotanicalDeco from "@/components/BotanicalDeco";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
-const EASING = [0.22, 1, 0.36, 1] as const;
+const SCROLL_SPRING = {
+  type: "spring",
+  damping: 20,
+  stiffness: 100,
+} as const;
+
+const SCROLL_VIEWPORT = {
+  once: true,
+  margin: "-100px",
+} as const;
 
 function Starburst({ className = "" }: { className?: string }) {
   return (
@@ -30,29 +39,14 @@ export default function HeroSection() {
   const content = useContent();
   const reduceMotion = useStableReducedMotion();
 
-  const container = {
-    hidden: { opacity: 0, scale: 0.94 },
-    show: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: reduceMotion ? 0 : 0.5,
-        ease: EASING,
-        staggerChildren: reduceMotion ? 0 : 0.12,
-      },
-    },
+  const fadeInLeft = {
+    initial: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -60 },
+    whileInView: { opacity: 1, x: 0 },
   };
 
-  const item = {
-    hidden: { opacity: 0, y: reduceMotion ? 0 : 24 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: reduceMotion ? 0 : 0.5,
-        ease: EASING,
-      },
-    },
+  const fadeInRight = {
+    initial: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 },
+    whileInView: { opacity: 1, x: 0 },
   };
 
   return (
@@ -105,23 +99,23 @@ export default function HeroSection() {
       <Starburst className="absolute right-[8%] top-[18%] hidden h-12 w-12 opacity-45 md:block" />
       <Starburst className="absolute bottom-24 right-[42%] hidden h-10 w-10 opacity-50 md:block" />
 
-      <motion.div
-        className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-center"
-        variants={container}
-        initial={reduceMotion ? false : "hidden"}
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-      >
+      <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-center">
         <div className="relative z-10">
           <motion.div
-            variants={item}
+            initial={fadeInLeft.initial}
+            whileInView={fadeInLeft.whileInView}
+            transition={{ ...SCROLL_SPRING, delay: reduceMotion ? 0 : 0.02 }}
+            viewport={SCROLL_VIEWPORT}
             className="inline-flex items-center rounded-full border border-[var(--olive-dark)]/30 bg-[var(--cream)]/95 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--olive-dark)] shadow-[0_12px_24px_rgba(112,23,50,0.12)]"
           >
             {content.hero.badge}
           </motion.div>
 
           <motion.h1
-            variants={item}
+            initial={fadeInLeft.initial}
+            whileInView={fadeInLeft.whileInView}
+            transition={{ ...SCROLL_SPRING, delay: reduceMotion ? 0 : 0.08 }}
+            viewport={SCROLL_VIEWPORT}
             className="mt-6 max-w-[14ch] font-hero text-[2.55rem] leading-[0.95] text-[var(--burgundy)] sm:text-[3.2rem] md:text-[3.8rem] lg:text-[4.5rem]"
           >
             <span className="block font-light italic text-[var(--burgundy)]/88">
@@ -136,13 +130,22 @@ export default function HeroSection() {
           </motion.h1>
 
           <motion.p
-            variants={item}
+            initial={fadeInLeft.initial}
+            whileInView={fadeInLeft.whileInView}
+            transition={{ ...SCROLL_SPRING, delay: reduceMotion ? 0 : 0.14 }}
+            viewport={SCROLL_VIEWPORT}
             className="mt-6 max-w-xl text-base font-light text-[var(--burgundy)]/90 sm:text-lg"
           >
             {content.hero.subtext}
           </motion.p>
 
-          <motion.div variants={item} className="mt-8 flex flex-wrap gap-3">
+          <motion.div
+            initial={fadeInLeft.initial}
+            whileInView={fadeInLeft.whileInView}
+            transition={{ ...SCROLL_SPRING, delay: reduceMotion ? 0 : 0.2 }}
+            viewport={SCROLL_VIEWPORT}
+            className="mt-8 flex flex-wrap gap-3"
+          >
             <a
               href="#program"
               className="cta-gradient-btn px-6 py-3 font-subheading text-sm font-semibold tracking-[0.09em]"
@@ -159,7 +162,10 @@ export default function HeroSection() {
         </div>
 
         <motion.div
-          variants={item}
+          initial={fadeInRight.initial}
+          whileInView={fadeInRight.whileInView}
+          transition={{ ...SCROLL_SPRING, delay: reduceMotion ? 0 : 0.12 }}
+          viewport={SCROLL_VIEWPORT}
           className="interactive-card relative mx-auto w-full max-w-[560px] rounded-[2rem] border border-[rgba(112,23,50,0.18)] bg-[linear-gradient(140deg,rgba(255,255,255,0.68),rgba(244,248,222,0.85))] p-4 shadow-[0_20px_40px_rgba(112,23,50,0.14)]"
         >
           <div className="deco-botanical relative grid min-h-[360px] place-items-center overflow-hidden rounded-[1.5rem] border-2 border-dashed border-[var(--pink-light)]/70 bg-[radial-gradient(circle_at_20%_20%,rgba(226,106,138,0.22),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(171,176,57,0.24),transparent_38%),rgba(244,248,222,0.9)] px-6 py-10 text-center">
@@ -170,7 +176,7 @@ export default function HeroSection() {
             </p>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

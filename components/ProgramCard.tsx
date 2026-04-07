@@ -1,10 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Compass, Eye, Rocket, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface ProgramCardProps {
+  programId?: string;
   title: string;
   subtitle: string;
   description: string;
@@ -12,7 +14,54 @@ interface ProgramCardProps {
   outcomes: string[];
 }
 
+type ProgramIconKey = "vision" | "strategy" | "impact" | "default";
+
+const PROGRAM_ICON_KEY_BY_ID: Record<string, ProgramIconKey> = {
+  "program-1": "vision",
+  "program-2": "strategy",
+  "program-3": "impact",
+};
+
+function resolveProgramIconKey(programId: string | undefined, title: string): ProgramIconKey {
+  if (programId && PROGRAM_ICON_KEY_BY_ID[programId]) {
+    return PROGRAM_ICON_KEY_BY_ID[programId];
+  }
+
+  const normalizedTitle = title.toLowerCase();
+
+  if (normalizedTitle.includes("vision")) {
+    return "vision";
+  }
+
+  if (normalizedTitle.includes("strategy")) {
+    return "strategy";
+  }
+
+  if (normalizedTitle.includes("impact")) {
+    return "impact";
+  }
+
+  return "default";
+}
+
+function ProgramIconGlyph({ iconKey, size }: { iconKey: ProgramIconKey; size: number }) {
+  if (iconKey === "vision") {
+    return <Eye size={size} />;
+  }
+
+  if (iconKey === "strategy") {
+    return <Compass size={size} />;
+  }
+
+  if (iconKey === "impact") {
+    return <Rocket size={size} />;
+  }
+
+  return <Sparkles size={size} />;
+}
+
 export function ProgramCard({
+  programId,
   title,
   subtitle,
   description,
@@ -27,31 +76,44 @@ export function ProgramCard({
   const outputLabel = language === "id" ? "Output Program" : "Program Outputs";
   const outcomeLabel = language === "id" ? "Hasil" : "Outcomes";
   const overlineLabel = language === "id" ? "Program Unggulan" : "Featured Program";
+  const scrollClassName = isFlipped ? "overflow-y-auto" : "overflow-hidden";
+  const iconKey = resolveProgramIconKey(programId, title);
 
   return (
     <div style={{ perspective: "1200px" }} className="h-full w-full">
-      <motion.div
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
+      <div
         style={{
           transformStyle: "preserve-3d",
+          WebkitTransformStyle: "preserve-3d",
           position: "relative",
           height: "100%",
         }}
-        className="relative min-h-[320px]"
+        className="relative min-h-[320px] overflow-hidden rounded-2xl"
       >
-        <div
+        <motion.div
+          initial={false}
+          animate={{ rotateY: isFlipped ? 180 : 0, opacity: isFlipped ? 0 : 1 }}
+          transition={{ duration: 0.68, ease: [0.22, 1, 0.36, 1] }}
           style={{
             transformStyle: "preserve-3d",
+            WebkitTransformStyle: "preserve-3d",
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
+            transformOrigin: "center center",
+            pointerEvents: isFlipped ? "none" : "auto",
+            willChange: "transform, opacity",
           }}
-          className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-[#bf1b59]/20 border-t-[5px] border-t-[#bf1b59] bg-[#f4f8de] p-7 shadow-[0_14px_28px_rgba(112,23,50,0.12)]"
+          className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-[#bf1b59]/20 border-t-[5px] border-t-[#bf1b59] bg-[#f4f8de] p-7 shadow-[0_14px_28px_rgba(112,23,50,0.12)] transition-opacity duration-300"
         >
           <div>
             <p className="mb-3 font-subheading text-[11px] font-semibold uppercase tracking-[0.18em] text-[#abb039]">
               {overlineLabel}
             </p>
+
+            <span className="mb-4 inline-grid size-11 place-items-center rounded-full bg-[#bf1b59]/10 text-[#bf1b59]">
+              <ProgramIconGlyph iconKey={iconKey} size={20} />
+            </span>
+
             <h3 className="mb-2 font-hero text-3xl italic text-[#701732]">{title}</h3>
             <p className="text-sm leading-relaxed text-[#576100]">{subtitle}</p>
           </div>
@@ -60,24 +122,35 @@ export function ProgramCard({
             <button
               type="button"
               onClick={() => setIsFlipped(true)}
-              className="rounded-full border border-[#bf1b59] px-5 py-2 font-subheading text-sm font-semibold text-[#bf1b59] transition-colors duration-200 hover:bg-[#bf1b59] hover:text-white"
+              className="rounded-full border border-[#bf1b59] px-5 py-2 font-subheading text-sm font-semibold text-[#bf1b59] transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-[#bf1b59] hover:text-white"
             >
               {detailLabel}
             </button>
           </div>
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
+          initial={false}
+          animate={{ rotateY: isFlipped ? 0 : -180, opacity: isFlipped ? 1 : 0 }}
+          transition={{ duration: 0.68, ease: [0.22, 1, 0.36, 1] }}
           style={{
             transformStyle: "preserve-3d",
+            WebkitTransformStyle: "preserve-3d",
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
+            transformOrigin: "center center",
+            pointerEvents: isFlipped ? "auto" : "none",
+            willChange: "transform, opacity",
           }}
-          className="absolute inset-0 flex flex-col rounded-2xl bg-[#701732] p-7 text-[#f4f8de] shadow-[0_16px_30px_rgba(112,23,50,0.2)]"
+          className="absolute inset-0 flex flex-col rounded-2xl bg-[#701732] p-7 text-[#f4f8de] shadow-[0_16px_30px_rgba(112,23,50,0.2)] transition-opacity duration-300"
         >
-          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
-            <h3 className="font-hero text-2xl italic text-[#f4f8de]">{title}</h3>
+          <div className={`min-h-0 flex-1 space-y-4 pr-1 ${scrollClassName}`}>
+            <div className="flex items-center gap-3">
+              <span className="inline-grid size-8 shrink-0 place-items-center rounded-full bg-[#f4f8de]/14 text-[#f4f8de]">
+                <ProgramIconGlyph iconKey={iconKey} size={16} />
+              </span>
+              <h3 className="font-hero text-2xl italic text-[#f4f8de]">{title}</h3>
+            </div>
             <p className="text-sm leading-relaxed text-[#f4f8de]/90">
               {description}
             </p>
@@ -115,13 +188,13 @@ export function ProgramCard({
             <button
               type="button"
               onClick={() => setIsFlipped(false)}
-              className="rounded-full border border-[#f4f8de]/40 px-5 py-2 font-subheading text-sm font-semibold text-[#f4f8de] transition-colors duration-200 hover:border-[#f4f8de] hover:bg-[#f4f8de] hover:text-[#701732]"
+              className="rounded-full border border-[#f4f8de]/40 px-5 py-2 font-subheading text-sm font-semibold text-[#f4f8de] transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[#f4f8de] hover:bg-[#f4f8de] hover:text-[#701732]"
             >
               {backLabel}
             </button>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }

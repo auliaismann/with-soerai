@@ -5,7 +5,16 @@ import BotanicalDeco from "@/components/BotanicalDeco";
 import { useContent } from "@/context/LanguageContext";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
-const EASING = [0.22, 1, 0.36, 1] as const;
+const SCROLL_SPRING = {
+  type: "spring",
+  damping: 20,
+  stiffness: 100,
+} as const;
+
+const SCROLL_VIEWPORT = {
+  once: true,
+  margin: "-100px",
+} as const;
 
 function CTAStarburst() {
   return (
@@ -30,15 +39,21 @@ export default function CTASection() {
   const content = useContent();
   const reduceMotion = useStableReducedMotion();
 
+  const reveal = (direction: "left" | "right", delay = 0) => ({
+    initial: reduceMotion
+      ? { opacity: 1, x: 0 }
+      : { opacity: 0, x: direction === "left" ? -60 : 60 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: SCROLL_VIEWPORT,
+    transition: {
+      ...SCROLL_SPRING,
+      delay: reduceMotion ? 0 : delay,
+    },
+  });
+
   return (
     <section className="px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-      <motion.div
-        initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: reduceMotion ? 0 : 0.5, ease: EASING }}
-        className="gradient-float relative mx-auto w-full max-w-7xl overflow-hidden rounded-[2.3rem] px-6 py-14 text-center text-[var(--cream)] shadow-[0_30px_42px_rgba(112,23,50,0.34)] sm:px-12"
-      >
+      <div className="gradient-float relative mx-auto w-full max-w-7xl overflow-hidden rounded-[2.3rem] px-6 py-14 text-center text-[var(--cream)] shadow-[0_30px_42px_rgba(112,23,50,0.34)] sm:px-12">
         <BotanicalDeco
           className="absolute left-2 top-4 w-[78px] opacity-75 sm:left-4 sm:top-6 sm:w-[102px] lg:left-6 lg:top-8 lg:w-[128px]"
           label="Botanical A"
@@ -52,15 +67,26 @@ export default function CTASection() {
           delay={1.45}
         />
 
-        <CTAStarburst />
-        <h2 className="mt-5 font-hero text-4xl italic leading-tight sm:text-5xl">
+        <motion.div {...reveal("left", 0.05)}>
+          <CTAStarburst />
+        </motion.div>
+        <motion.h2
+          {...reveal("right", 0.1)}
+          className="mt-5 font-hero text-4xl italic leading-tight sm:text-5xl"
+        >
           {content.cta.title}
-        </h2>
-        <p className="mx-auto mt-4 max-w-3xl text-base text-[var(--cream)]/90 sm:text-lg">
+        </motion.h2>
+        <motion.p
+          {...reveal("left", 0.14)}
+          className="mx-auto mt-4 max-w-3xl text-base text-[var(--cream)]/90 sm:text-lg"
+        >
           {content.cta.subtitle}
-        </p>
+        </motion.p>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <motion.div
+          {...reveal("right", 0.2)}
+          className="mt-8 flex flex-wrap justify-center gap-3"
+        >
           <a
             href="#galeri"
             className="rounded-full bg-[var(--cream)] px-6 py-3 font-subheading text-sm font-semibold uppercase tracking-[0.09em] text-[var(--pink-primary)] shadow-[0_12px_24px_rgba(0,0,0,0.18)] transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
@@ -73,8 +99,8 @@ export default function CTASection() {
           >
             {content.cta.secondary}
           </a>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }
