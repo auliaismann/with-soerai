@@ -43,36 +43,39 @@ export default function VisionMissionSection() {
         </motion.h2>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          {/* CARD VISI */}
           <motion.article
             {...reveal("left", 0.05)}
             className="interactive-card shimmer-border relative overflow-hidden rounded-3xl border border-white/35 bg-[linear-gradient(135deg,var(--pink-primary),var(--burgundy))] p-7 text-[var(--cream)] shadow-[0_22px_38px_rgba(112,23,50,0.28)]"
           >
             <motion.div
               {...reveal("left", 0.08)}
-              className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--olive-light)]/30 text-[var(--olive-dark)]"
+              className="relative z-10 mb-5 inline-flex size-20 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/12 text-white shadow-[0_10px_24px_rgba(40,10,24,0.25)] backdrop-blur-sm"
             >
-              <Target className="h-8 w-8" />
+              <Target className="size-10 shrink-0" strokeWidth={2.2} />
             </motion.div>
             <motion.h3
               {...reveal("left", 0.12)}
-              className="font-subheading text-2xl font-semibold uppercase tracking-[0.12em]"
+              className="relative z-10 font-subheading text-2xl font-semibold uppercase tracking-[0.12em] text-white"
             >
               {content.visionMission.visionTitle}
             </motion.h3>
             <motion.p
               {...reveal("right", 0.16)}
-              className="mt-4 text-[15px] leading-relaxed text-[var(--cream)]/92 sm:text-base"
+              className="relative z-10 mt-5 text-base leading-relaxed text-[var(--cream)]/95 sm:text-lg"
             >
               {content.visionMission.visionBody}
             </motion.p>
           </motion.article>
 
+          {/* CARD MISI */}
           <motion.article
             {...reveal("right", 0.08)}
             className="interactive-card shimmer-border relative rounded-3xl border border-[rgba(87,97,0,0.35)] bg-[rgba(244,248,222,0.92)] p-7 text-[var(--burgundy)] shadow-[0_18px_30px_rgba(112,23,50,0.12)]"
           >
             <motion.div
               {...reveal("right", 0.1)}
+              // Card ini terang, jadi warna olive-dark tetap dipertahankan
               className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--olive-light)]/30 text-[var(--olive-dark)]"
             >
               <ListOrdered className="h-8 w-8" />

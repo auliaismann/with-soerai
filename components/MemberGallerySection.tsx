@@ -1,24 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useContent, useLanguage } from "@/context/LanguageContext";
 import { members, MemberType } from "@/lib/members";
-import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
 type Filter = MemberType;
-const EASING = [0.22, 1, 0.36, 1] as const;
-const SCROLL_SPRING = {
-  type: "spring",
-  damping: 20,
-  stiffness: 100,
-} as const;
-
-const SCROLL_VIEWPORT = {
-  once: true,
-  margin: "-100px",
-} as const;
 
 const memberDisplayOrder: Record<string, number> = {
   "t-01": 1, // President
@@ -47,41 +34,12 @@ const memberDisplayOrder: Record<string, number> = {
 export default function MemberGallerySection() {
   const content = useContent();
   const { language } = useLanguage();
-  const reduceMotion = useStableReducedMotion();
   const [filter, setFilter] = useState<Filter>("member");
   const mobileScrollerRef = useRef<HTMLDivElement>(null);
   const emptyStateText =
     language === "id"
       ? "Belum ada profil untuk filter ini."
       : "No profiles are available for this filter.";
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: reduceMotion ? 0 : 0.5,
-        ease: EASING,
-        staggerChildren: reduceMotion ? 0 : 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.88 },
-    visible: (index: number) => ({
-      opacity: 1,
-      scale: 1,
-      transition: reduceMotion
-        ? { duration: 0 }
-        : {
-            type: "spring" as const,
-            duration: 0.5,
-            bounce: 0.28,
-            delay: index * 0.04,
-          },
-    }),
-  };
 
   const filteredMembers = useMemo(() => {
     const byType = members.filter((person) => person.type === filter);
@@ -106,19 +64,7 @@ export default function MemberGallerySection() {
     mobileScrollerRef.current?.scrollTo({ left: 0, behavior: "smooth" });
   }, [filter]);
 
-  const reveal = (direction: "left" | "right", delay = 0) => ({
-    initial: reduceMotion
-      ? { opacity: 1, x: 0 }
-      : { opacity: 0, x: direction === "left" ? -60 : 60 },
-    whileInView: { opacity: 1, x: 0 },
-    viewport: SCROLL_VIEWPORT,
-    transition: {
-      ...SCROLL_SPRING,
-      delay: reduceMotion ? 0 : delay,
-    },
-  });
-
-  const renderCard = (person: (typeof members)[number], index: number, compact: boolean) => {
+  const renderCard = (person: (typeof members)[number], compact: boolean) => {
     const roleText = language === "id" ? person.roleId : person.roleEn;
     const photoSrc = encodeURI(person.imagePlaceholder);
     const typeLabel =
@@ -135,10 +81,8 @@ export default function MemberGallerySection() {
         : person.achievementsEn ?? person.achievementsId ?? [];
 
     return (
-      <motion.article
+      <article
         key={person.id}
-        variants={itemVariants}
-        custom={index}
         className={`interactive-card interactive-card-hover rounded-2xl ${
           isMentor
             ? "border border-[rgba(191,27,89,0.26)] bg-[linear-gradient(150deg,rgba(255,255,255,0.98)_0%,rgba(255,240,246,0.95)_52%,rgba(255,247,230,0.95)_100%)] shadow-[0_14px_28px_rgba(191,27,89,0.14)]"
@@ -242,23 +186,22 @@ export default function MemberGallerySection() {
             {typeLabel}
           </span>
         ) : null}
-      </motion.article>
+      </article>
     );
   };
 
   return (
     <section id="galeri" className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-7xl">
-        <motion.div {...reveal("left", 0.02)} className="text-center">
+        <div className="text-center">
           <h2 className="font-hero text-4xl italic text-[var(--burgundy)] sm:text-5xl">
             {content.gallery.sectionTitle}
           </h2>
-        </motion.div>
+        </div>
 
         <div className="hide-scrollbar mt-8 -mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
           <div className="flex w-max min-w-full flex-nowrap gap-3 sm:w-auto sm:min-w-0 sm:flex-wrap sm:justify-center">
-            <motion.button
-              {...reveal("left", 0.08)}
+            <button
               type="button"
               onClick={() => setFilter("member")}
               className={`shrink-0 whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition ${
@@ -268,9 +211,8 @@ export default function MemberGallerySection() {
               }`}
             >
               {content.gallery.filters.member}
-            </motion.button>
-            <motion.button
-              {...reveal("right", 0.12)}
+            </button>
+            <button
               type="button"
               onClick={() => setFilter("mentor")}
               className={`shrink-0 whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition ${
@@ -280,7 +222,7 @@ export default function MemberGallerySection() {
               }`}
             >
               {content.gallery.filters.mentor}
-            </motion.button>
+            </button>
           </div>
         </div>
 
@@ -291,27 +233,21 @@ export default function MemberGallerySection() {
         ) : (
           <>
             <div className="mt-10 md:hidden">
-              <motion.div
+              <div
                 ref={mobileScrollerRef}
                 key={`mobile-${filter}-${filteredMembers.length}`}
-                variants={containerVariants}
-                initial={reduceMotion ? "visible" : "hidden"}
-                animate="visible"
                 className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-4"
               >
-                {filteredMembers.map((person, index) => renderCard(person, index, false))}
-              </motion.div>
+                {filteredMembers.map((person) => renderCard(person, false))}
+              </div>
             </div>
 
-            <motion.div
+            <div
               key={`desktop-${filter}-${filteredMembers.length}`}
-              variants={containerVariants}
-              initial={reduceMotion ? "visible" : "hidden"}
-              animate="visible"
               className="mt-10 hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             >
-              {filteredMembers.map((person, index) => renderCard(person, index, true))}
-            </motion.div>
+              {filteredMembers.map((person) => renderCard(person, true))}
+            </div>
           </>
         )}
       </div>
