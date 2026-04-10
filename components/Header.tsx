@@ -117,12 +117,21 @@ export default function Header() {
       >
         <div
           className={`glass-nav flex w-full items-center justify-between transition-[padding,border-radius] duration-300 ${
-            isHeaderScrolled ? "px-3 py-1.5 sm:px-5 sm:py-2" : "px-3 py-2 sm:px-5 sm:py-2.5"
+            isHeaderScrolled
+              ? "px-3 py-1.5 sm:px-5 sm:py-2"
+              : "px-3 py-2 sm:px-5 sm:py-2.5"
           } ${
-            menuOpen ? "rounded-t-2xl rounded-b-none lg:rounded-full" : "rounded-2xl"
+            menuOpen
+              ? "rounded-t-2xl rounded-b-none lg:rounded-full"
+              : "rounded-2xl"
           }`}
         >
-          <Link href="#hero" aria-label="WITH SOERAI Home" className="shrink-0" onClick={closeMobileMenu}>
+          <Link
+            href="#hero"
+            aria-label="WITH SOERAI Home"
+            className="shrink-0"
+            onClick={closeMobileMenu}
+          >
             <Logo className="block h-auto w-[100px] sm:w-[120px]" priority />
           </Link>
 
@@ -141,7 +150,7 @@ export default function Header() {
           <div className="hidden items-center gap-3 lg:flex">
             <LanguageToggle />
             <a
-              href="#galeri"
+              href="https://s.unhas.ac.id/JOINWITHSOERAI"
               className="cta-gradient-btn px-5 py-2.5 font-subheading text-sm font-semibold tracking-[0.06em]"
             >
               {content.header.joinNow}
@@ -153,7 +162,9 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label={menuOpen ? content.header.menuClose : content.header.menuOpen}
+              aria-label={
+                menuOpen ? content.header.menuClose : content.header.menuOpen
+              }
               className="y2k-pill grid size-10 place-items-center rounded-full text-[var(--burgundy)]"
             >
               <MoreVertical size={22} color="#bf1b59" />
@@ -187,7 +198,8 @@ export default function Header() {
             <div
               className="pointer-events-none absolute inset-0"
               style={{
-                backgroundImage: "radial-gradient(circle, #abb039 1px, transparent 1px)",
+                backgroundImage:
+                  "radial-gradient(circle, #abb039 1px, transparent 1px)",
                 backgroundSize: "24px 24px",
                 opacity: 0.06,
               }}
@@ -197,7 +209,8 @@ export default function Header() {
               className="absolute left-0 right-0 top-0"
               style={{
                 height: "5px",
-                background: "linear-gradient(to right, #bf1b59, #e26a8a, #abb039)",
+                background:
+                  "linear-gradient(to right, #bf1b59, #e26a8a, #abb039)",
               }}
             />
 
@@ -228,7 +241,9 @@ export default function Header() {
                     href={item.href}
                     onClick={handleMobileAnchorClick(item.href)}
                     className={`block py-4 text-[28px] font-bold transition-colors duration-200 hover:text-[#bf1b59] ${
-                      index !== content.header.nav.length - 1 ? "border-b border-[rgba(191,27,89,0.12)]" : ""
+                      index !== content.header.nav.length - 1
+                        ? "border-b border-[rgba(191,27,89,0.12)]"
+                        : ""
                     }`}
                     style={{
                       color: "#701732",
