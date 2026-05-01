@@ -221,7 +221,7 @@ export default function Footer() {
               Partner Digital
             </h4>
             <a
-              href={EXTERNAL_LINKS.dekatLokalInstagram}
+              href={EXTERNAL_LINKS.dekatLokalWebsite}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 inline-block"
@@ -249,7 +249,7 @@ export default function Footer() {
         <p className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-center">
           <span>© 2026 With Soerai. All Rights Reserved | Powered by</span>
           <a
-            href={EXTERNAL_LINKS.dekatLokalInstagram}
+            href={EXTERNAL_LINKS.dekatLokalWebsite}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center font-semibold underline decoration-[1.5px] underline-offset-[3px] transition-colors hover:text-[var(--pink-primary)]"
