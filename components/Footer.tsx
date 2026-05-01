@@ -6,6 +6,7 @@ import { Mail } from "lucide-react";
 import { useContent } from "@/context/LanguageContext";
 import { EXTERNAL_LINKS } from "@/lib/links";
 import Logo from "@/components/Logo";
+import { scrollToSection } from "@/lib/scrollToSection";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 import dekatLokalLogo from "../public/image/dekatlokal.png";
 
@@ -81,6 +82,13 @@ function LinkedInIcon({ size = 17 }: { size?: number }) {
 export default function Footer() {
   const content = useContent();
   const reduceMotion = useStableReducedMotion();
+  const scrollBehavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
+
+  const handleNavClick =
+    (target: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      scrollToSection(target, scrollBehavior);
+    };
 
   const reveal = (direction: "left" | "right", delay = 0) => ({
     initial: reduceMotion
@@ -114,14 +122,16 @@ export default function Footer() {
             {content.header.nav.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href="/"
+                onClick={handleNavClick(item.href)}
                 className="transition-colors duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:text-[var(--pink-light)]"
               >
                 {item.label}
               </a>
             ))}
             <a
-              href="#galeri"
+              href="/"
+              onClick={handleNavClick("#galeri")}
               className="transition-colors duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:text-[var(--pink-light)]"
             >
               {content.header.joinNow}

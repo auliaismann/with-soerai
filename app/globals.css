@@ -49,6 +49,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
   background: var(--cream);
   width: 100%;
   max-width: 100%;
@@ -73,6 +74,17 @@ body {
   color: var(--burgundy);
   font-family: var(--font-body);
   line-height: 1.6;
+}
+
+section {
+  scroll-margin-top: 96px;
+}
+
+@supports (content-visibility: auto) {
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 900px;
+  }
 }
 
 body.no-scroll {

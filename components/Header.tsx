@@ -8,6 +8,8 @@ import { useContent } from "@/context/LanguageContext";
 import BackToTop from "./BackToTop";
 import LanguageToggle from "@/components/LanguageToggle";
 import { EXTERNAL_LINKS } from "@/lib/links";
+import { scrollToSection } from "@/lib/scrollToSection";
+import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 import Logo from "@/components/Logo";
 
 const MOBILE_LINK_CONTAINER_VARIANTS = {
@@ -34,6 +36,8 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
   const [isPoweredLinkHovered, setIsPoweredLinkHovered] = useState(false);
+  const reduceMotion = useStableReducedMotion();
+  const scrollBehavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,21 +95,17 @@ export default function Header() {
     setMenuOpen(false);
   };
 
-  const handleMobileAnchorClick =
-    (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const scrollToTarget = (target: string) => {
+    window.setTimeout(() => {
+      scrollToSection(target, scrollBehavior);
+    }, 10);
+  };
+
+  const handleNavClick =
+    (target: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault();
       closeMobileMenu();
-
-      window.setTimeout(() => {
-        const section = document.querySelector(href);
-
-        if (section instanceof HTMLElement) {
-          section.scrollIntoView({ behavior: "smooth", block: "start" });
-          return;
-        }
-
-        window.location.hash = href;
-      }, 10);
+      scrollToTarget(target);
     };
 
   return (
@@ -127,10 +127,10 @@ export default function Header() {
           }`}
         >
           <Link
-            href="#hero"
+            href="/"
             aria-label="WITH SOERAI Home"
             className="shrink-0"
-            onClick={closeMobileMenu}
+            onClick={handleNavClick("#hero")}
           >
             <Logo className="block h-auto w-[100px] sm:w-[120px]" priority />
           </Link>
@@ -139,7 +139,8 @@ export default function Header() {
             {content.header.nav.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href="/"
+                onClick={handleNavClick(item.href)}
                 className="font-subheading text-sm font-semibold tracking-[0.05em] text-[var(--burgundy)] transition-colors hover:text-[var(--pink-primary)]"
               >
                 {item.label}
@@ -238,8 +239,8 @@ export default function Header() {
                   <motion.a
                     key={item.href}
                     variants={MOBILE_LINK_ITEM_VARIANTS}
-                    href={item.href}
-                    onClick={handleMobileAnchorClick(item.href)}
+                    href="/"
+                    onClick={handleNavClick(item.href)}
                     className={`block py-4 text-[28px] font-bold transition-colors duration-200 hover:text-[#bf1b59] ${
                       index !== content.header.nav.length - 1
                         ? "border-b border-[rgba(191,27,89,0.12)]"
@@ -258,8 +259,8 @@ export default function Header() {
               <div className="flex-1" />
 
               <a
-                href="#galeri"
-                onClick={handleMobileAnchorClick("#galeri")}
+                href="/"
+                onClick={handleNavClick("#galeri")}
                 className="w-full rounded-2xl py-[18px] text-center text-base font-bold tracking-[0.02em] text-white transition-opacity hover:opacity-90"
                 style={{
                   background: "linear-gradient(135deg, #bf1b59, #701732)",
@@ -273,7 +274,7 @@ export default function Header() {
               <p className="mt-[14px] text-center text-[11px] text-[#576100]">
                 Powered by{" "}
                 <a
-                  href={EXTERNAL_LINKS.dekatLokalInstagram}
+                  href={EXTERNAL_LINKS.dekatLokalWebsite}
                   target="_blank"
                   rel="noopener noreferrer"
                   onMouseEnter={() => setIsPoweredLinkHovered(true)}

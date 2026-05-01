@@ -4,5 +4,6 @@ export const EXTERNAL_LINKS = {
   withSoeraiInstagram: "https://instagram.com/withsoerai",
   withSoeraiTikTok: "https://tiktok.com/@withsoerai",
   withSoeraiLinkedIn: "https://linkedin.com/in/withsoerai",
+  dekatLokalWebsite: "https://dekatlokal.com",
   dekatLokalInstagram: "https://instagram.com/dekatlokal",
 } as const;

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import BotanicalDeco from "@/components/BotanicalDeco";
 import { useContent } from "@/context/LanguageContext";
 import { EXTERNAL_LINKS } from "@/lib/links";
+import { scrollToSection } from "@/lib/scrollToSection";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
 const SCROLL_SPRING = {
@@ -39,6 +40,7 @@ function CTAStarburst() {
 export default function CTASection() {
   const content = useContent();
   const reduceMotion = useStableReducedMotion();
+  const scrollBehavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
 
   const reveal = (direction: "left" | "right", delay = 0) => ({
     initial: reduceMotion
@@ -51,6 +53,11 @@ export default function CTASection() {
       delay: reduceMotion ? 0 : delay,
     },
   });
+
+  const handleSecondaryClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    scrollToSection("#tentang-kami", scrollBehavior);
+  };
 
   return (
     <section className="px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
@@ -97,7 +104,8 @@ export default function CTASection() {
             {content.cta.primary}
           </a>
           <a
-            href="#tentang-kami"
+            href="/"
+            onClick={handleSecondaryClick}
             className="rounded-full border border-[var(--cream)] px-6 py-3 font-subheading text-sm font-semibold uppercase tracking-[0.09em] text-[var(--cream)] transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:bg-white/8"
           >
             {content.cta.secondary}

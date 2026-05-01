@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useContent } from "@/context/LanguageContext";
 import BotanicalDeco from "@/components/BotanicalDeco";
 import { EXTERNAL_LINKS } from "@/lib/links";
+import { scrollToSection } from "@/lib/scrollToSection";
 import { useStableReducedMotion } from "@/lib/useStableReducedMotion";
 
 const SCROLL_SPRING = {
@@ -53,6 +54,7 @@ export default function HeroSection() {
   const content = useContent();
   const reduceMotion = useStableReducedMotion();
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const scrollBehavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
 
   useEffect(() => {
     if (HERO_SLIDES.length < 2) {
@@ -76,6 +78,11 @@ export default function HeroSection() {
   const fadeInRight = {
     initial: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 },
     whileInView: { opacity: 1, x: 0 },
+  };
+
+  const handleAboutClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    scrollToSection("#tentang-kami", scrollBehavior);
   };
 
   return (
@@ -186,7 +193,8 @@ export default function HeroSection() {
               {content.hero.ctaPrimary}
             </a>
             <a
-              href="#tentang-kami"
+              href="/"
+              onClick={handleAboutClick}
               className="ghost-btn px-6 py-3 font-subheading text-sm font-semibold tracking-[0.09em]"
             >
               {content.hero.ctaSecondary}
@@ -211,7 +219,7 @@ export default function HeroSection() {
                 }}
                 className="flex h-full min-h-[354px]"
               >
-                {HERO_SLIDES.map((slide) => (
+                {HERO_SLIDES.map((slide, index) => (
                   <div key={slide.src} className="relative h-auto min-h-[354px] min-w-full">
                     <Image
                       src={slide.src}
@@ -219,7 +227,7 @@ export default function HeroSection() {
                       fill
                       sizes="(min-width: 1024px) 32vw, (min-width: 640px) 62vw, 88vw"
                       className="object-cover object-center"
-                      priority
+                      priority={index === 0}
                     />
                   </div>
                 ))}

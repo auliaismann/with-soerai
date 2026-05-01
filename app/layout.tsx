@@ -22,7 +22,12 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+const metadataBase = process.env.NEXT_PUBLIC_SITE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+  : new URL("http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase,
   title: {
     default: "WITH SOERAI | Woman Illuminating Through Harmony",
     template: "%s | WITH SOERAI",
@@ -49,10 +54,8 @@ export const metadata: Metadata = {
     locale: "id_ID",
     images: [
       {
-        url: "/images/logo-withsoerai.png",
-        width: 370,
-        height: 92,
-        alt: "WITH SOERAI",
+        url: "/images/hero-image-1.jpg",
+        alt: "WITH SOERAI Hero",
       },
     ],
   },
@@ -61,7 +64,7 @@ export const metadata: Metadata = {
     title: "WITH SOERAI | Woman Illuminating Through Harmony",
     description:
       "WITH SOERAI adalah komunitas pemberdayaan perempuan muda Indonesia Timur melalui capacity building, mentorship, dan kepemimpinan berbasis komunitas.",
-    images: ["/images/logo-withsoerai.png"],
+    images: ["/images/hero-image-1.jpg"],
   },
 };
 
