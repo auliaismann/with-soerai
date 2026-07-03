@@ -23,11 +23,11 @@ const SCROLL_VIEWPORT = {
 const HERO_SLIDES = [
   {
     src: "/images/hero-image-1.jpg",
-    alt: "WITH SOERAI Hero Collage 1",
+    alt: "Tim perempuan muda WITH SOERAI dari Indonesia Timur",
   },
   {
     src: "/images/hero-image-2.jpg",
-    alt: "WITH SOERAI Hero Collage 2",
+    alt: "Anggota WITH SOERAI dalam kegiatan komunitas perempuan muda",
   },
 ] as const;
 
@@ -193,7 +193,7 @@ export default function HeroSection() {
               {content.hero.ctaPrimary}
             </a>
             <a
-              href="/"
+              href="#tentang-kami"
               onClick={handleAboutClick}
               className="ghost-btn px-6 py-3 font-subheading text-sm font-semibold tracking-[0.09em]"
             >

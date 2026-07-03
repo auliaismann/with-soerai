@@ -104,7 +104,7 @@ export default function CTASection() {
             {content.cta.primary}
           </a>
           <a
-            href="/"
+            href="#tentang-kami"
             onClick={handleSecondaryClick}
             className="rounded-full border border-[var(--cream)] px-6 py-3 font-subheading text-sm font-semibold uppercase tracking-[0.09em] text-[var(--cream)] transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:bg-white/8"
           >

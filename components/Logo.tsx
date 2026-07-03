@@ -12,7 +12,7 @@ export default function Logo({ className, withTagline = false, priority = false 
   return (
     <Image
       src="/images/logo-withsoerai.png"
-      alt="WITH SOERAI"
+      alt="Logo WITH SOERAI - Woman Illuminating Through Harmony"
       width={370}
       height={92}
       sizes="(max-width: 640px) 120px, 190px"

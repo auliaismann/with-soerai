@@ -122,7 +122,7 @@ export default function Footer() {
             {content.header.nav.map((item) => (
               <a
                 key={item.href}
-                href="/"
+                href={item.href}
                 onClick={handleNavClick(item.href)}
                 className="transition-colors duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:text-[var(--pink-light)]"
               >
@@ -130,7 +130,7 @@ export default function Footer() {
               </a>
             ))}
             <a
-              href="/"
+              href="#galeri"
               onClick={handleNavClick("#galeri")}
               className="transition-colors duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:text-[var(--pink-light)]"
             >

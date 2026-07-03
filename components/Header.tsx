@@ -139,7 +139,7 @@ export default function Header() {
             {content.header.nav.map((item) => (
               <a
                 key={item.href}
-                href="/"
+                href={item.href}
                 onClick={handleNavClick(item.href)}
                 className="font-subheading text-sm font-semibold tracking-[0.05em] text-[var(--burgundy)] transition-colors hover:text-[var(--pink-primary)]"
               >
@@ -151,7 +151,7 @@ export default function Header() {
           <div className="hidden items-center gap-3 lg:flex">
             <LanguageToggle />
             <a
-              href="https://s.unhas.ac.id/JOINWITHSOERAI"
+              href={EXTERNAL_LINKS.registrationForm}
               className="cta-gradient-btn px-5 py-2.5 font-subheading text-sm font-semibold tracking-[0.06em]"
             >
               {content.header.joinNow}
@@ -239,7 +239,7 @@ export default function Header() {
                   <motion.a
                     key={item.href}
                     variants={MOBILE_LINK_ITEM_VARIANTS}
-                    href="/"
+                    href={item.href}
                     onClick={handleNavClick(item.href)}
                     className={`block py-4 text-[28px] font-bold transition-colors duration-200 hover:text-[#bf1b59] ${
                       index !== content.header.nav.length - 1
@@ -259,7 +259,7 @@ export default function Header() {
               <div className="flex-1" />
 
               <a
-                href="/"
+                href="#galeri"
                 onClick={handleNavClick("#galeri")}
                 className="w-full rounded-2xl py-[18px] text-center text-base font-bold tracking-[0.02em] text-white transition-opacity hover:opacity-90"
                 style={{

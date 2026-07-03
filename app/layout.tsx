@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { Montserrat, Playfair_Display, Poppins } from "next/font/google";
 import { LanguageProvider } from "@/context/LanguageContext";
+import {
+  absoluteUrl,
+  SITE_DESCRIPTION,
+  SITE_LOCALE,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+} from "@/lib/seo";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -22,50 +30,84 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const metadataBase = process.env.NEXT_PUBLIC_SITE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
-  : new URL("http://localhost:3000");
+const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {
-  metadataBase,
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "WITH SOERAI | Woman Illuminating Through Harmony",
+    default: SITE_TITLE,
     template: "%s | WITH SOERAI",
   },
-  description:
-    "WITH SOERAI adalah komunitas pemberdayaan perempuan muda Indonesia Timur melalui capacity building, mentorship, dan kepemimpinan berbasis komunitas.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   keywords: [
     "WITH SOERAI",
-    "women empowerment",
+    "With Soerai",
+    "Soerai",
+    "komunitas perempuan",
+    "pemberdayaan perempuan",
+    "perempuan muda Indonesia Timur",
+    "women empowerment Indonesia",
     "Indonesia Timur",
-    "mentorship perempuan",
-    "komunitas perempuan muda",
+    "mentorship perempuan muda",
+    "kepemimpinan perempuan",
   ],
+  alternates: {
+    canonical: SITE_URL,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   icons: {
-    icon: "/images/logo-withsoerai.png",
-    shortcut: "/images/logo-withsoerai.png",
-    apple: "/images/logo-withsoerai.png",
+    icon: [
+      {
+        url: "/images/icon-with-soerai.svg",
+        type: "image/svg+xml",
+        sizes: "any",
+      },
+    ],
+    shortcut: "/images/icon-with-soerai.svg",
   },
   openGraph: {
-    title: "WITH SOERAI | Woman Illuminating Through Harmony",
-    description:
-      "WITH SOERAI adalah komunitas pemberdayaan perempuan muda Indonesia Timur melalui capacity building, mentorship, dan kepemimpinan berbasis komunitas.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
     type: "website",
-    locale: "id_ID",
+    locale: SITE_LOCALE,
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/images/hero-image-1.jpg",
-        alt: "WITH SOERAI Hero",
+        url: absoluteUrl("/opengraph-image"),
+        width: 1200,
+        height: 630,
+        alt: "Tim WITH SOERAI, komunitas perempuan muda Indonesia Timur",
+        type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "WITH SOERAI | Woman Illuminating Through Harmony",
-    description:
-      "WITH SOERAI adalah komunitas pemberdayaan perempuan muda Indonesia Timur melalui capacity building, mentorship, dan kepemimpinan berbasis komunitas.",
-    images: ["/images/hero-image-1.jpg"],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [absoluteUrl("/opengraph-image")],
   },
+  category: "community",
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
 };
 
 export default function RootLayout({
